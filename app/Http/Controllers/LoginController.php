@@ -8,43 +8,48 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
 
 class LoginController extends Controller
 {
+
+    public function logout_session(Request $request){
+        return response()->json([
+            'status' => $request->session()->get('csrf_token'),
+            'message' => 'User is logged out successfully'
+            ], 200);
+    }
     public function login(Request $request)
     {
-        $validate = Validator::make($request->all(), [
+        // Validate the request
+        $validator = Validator::make($request->all(), [
             'email' => 'required|string|email',
             'password' => 'required|string'
         ]);
 
-        if($validate->fails()){
-            return response()->json([
-                'status' => 'failed',
-                'message' => 'Validation Error!',
-                'data' => $validate->errors(),
-            ], 403);
+        if ($validator->fails()) {
+            return response()->json(['error' => $validator->errors()], 422);
         }
 
-        // Check email exist
-        $user = User::where('email', $request->email)->first();
-
-        // Check password
-        if(!$user || !Hash::check($request->password, $user->password)) {
-            return response()->json([
-                'status' => 'failed',
-                'message' => 'Invalid credentials'
-                ], 401);
+        // Attempt to authenticate the user
+        if (!Auth::attempt($request->only('email', 'password'))) {
+            return response()->json(['error' => 'Invalid credentials'], 401);
         }
 
-        $data['token'] = $user->createToken($request->email)->plainTextToken;
-        $data['user'] = $user;
-
+        // Retrieve the authenticated user
+        $user = Auth::user();
+        // Generate the token for the user
+        $token = $user->createToken('token')->plainTextToken;
+        // $request->session()->put('csrf_token', $token);
+        Session::put('token', $token);
+        // Create the response
         $response = [
             'status' => 'success',
             'message' => 'User is logged in successfully.',
-            'data' => $data,
+            'token'=> session('token'),
+            // 'token' => $request->session()->get('csrf_token'),
+            'user' => $user  // Optional: Include user data in the response
         ];
 
         return response()->json($response, 200);
@@ -58,10 +63,10 @@ class LoginController extends Controller
      */
     public function logout(Request $request)
     {
-        $request()->user()->tokens()->delete();
-        return response()->json([
-            'status' => 'success',
-            'message' => 'User is logged out successfully'
-            ], 200);
+        // $request()->user()->tokens()->delete();
+        // return response()->json([
+        //     'status' => 'success',
+        //     'message' => 'User is logged out successfully'
+        //     ], 200);
     }
 }

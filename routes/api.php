@@ -28,11 +28,12 @@ use Illuminate\Validation\ValidationException;
 | be assigned to the "api" middleware group. Make something great!
 |
 */
+// ->middleware('auth:sanctum')
 
-
-Route::post('auth/login', [AuthController::class, 'login']);
-Route::post('auth/logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
+Route::get('auth/login', [LoginController::class, 'login']);
+Route::post('auth/logout', [LoginController::class, 'logout']);
+Route::get('/logout_session', [LoginController::class, 'logout_session']);
+Route::middleware('auth:sanctum')->get('/user_auth', function (Request $request) {
     return $request->user();
 });
 Route::post('/login', function (Request $request) {
