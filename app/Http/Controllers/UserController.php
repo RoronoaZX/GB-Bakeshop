@@ -75,6 +75,8 @@ class UserController extends Controller
             'remember_token' => Str::random(60),
         ]);
         return response()->json($user);
+
+
     }
     /**
      * Display the specified resource.

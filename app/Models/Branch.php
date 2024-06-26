@@ -31,7 +31,7 @@ class Branch extends Model
     }
 
 
-    public function branch_products(): HasMany
+    public function branch_products()
     {
         return $this->hasMany(BranchesProduct::class,'branches_id','id');
     }

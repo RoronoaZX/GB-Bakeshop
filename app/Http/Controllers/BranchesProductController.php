@@ -9,28 +9,15 @@ use Illuminate\Http\Request;
 
 class BranchesProductController extends Controller
 {
-
-    public function index()
+    public function getProducts($branchId)
     {
-        // Eager load the product
-        $branchProducts = BranchesProduct::with('product')->get();
+        $branchProducts = BranchesProduct::where('branches_id', $branchId)->with(['branch', 'product'])->get();
 
-        // Transform the data to include only the necessary fields
-        $branchProducts = $branchProducts->map(function($branchProduct) {
-            return [
-                'id' => $branchProduct->id,
-                'branches_id' => $branchProduct->branches_id,
-                'price' => $branchProduct->price,
-                'product' => [
-                    'id' => $branchProduct->product->id,
-                    'name' => $branchProduct->product->name,
-                    'category' => $branchProduct->product->category,
-                ]
-            ];
-        });
 
         return response()->json($branchProducts, 200);
     }
+
+
 
 
     public function store(Request $request)

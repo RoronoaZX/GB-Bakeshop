@@ -15,11 +15,12 @@ return [
     |
     */
 
-    'paths' => ['api/*', 'login','sanctum/csrf-cookie'],
+    'paths' => ['api/*', 'login','sanctum/csrf-cookie', 'login', 'logout', 'user'],
 
     'allowed_methods' => ['*'],
 
-    'allowed_origins' => ['*'],
+    'allowed_origins' => ['http://localhost:9000
+'],
 
     'allowed_origins_patterns' => [],
 

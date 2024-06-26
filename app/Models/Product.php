@@ -44,4 +44,9 @@ class Product extends Model
         return $query->where('name','LIKE', "%{$keyword}%")
                      ->orWhere('category', 'LIKE', "%{$keyword}%");
     }
+
+    public function branch_products()
+    {
+        return $this->hasMany(BranchesProduct::class, 'branches_id');
+    }
 }

@@ -17,6 +17,7 @@ class RecipeController extends Controller
             return [
                 'id' => $recipe->id,
                 'name' => $recipe->name,
+                'category' => $recipe->category,
                 'target' => $recipe->target,
                 'bread_groups' => $recipe->breadGroups->pluck('bread.name'),
                 'ingredient_groups' => $recipe->ingredientGroups->map(function ($ingredientGroup) {
@@ -49,6 +50,7 @@ class RecipeController extends Controller
     {
         $validatedData = $request->validate([
             'name' => 'required|string|max:255',
+            'category' => 'required|string|max:30',
             'target' => 'required|integer',
             'breads' => 'required|array',
             'breads.*.bread_id' => 'required|integer|exists:products,id',

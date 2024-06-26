@@ -30,9 +30,14 @@ use Illuminate\Validation\ValidationException;
 */
 // ->middleware('auth:sanctum')
 
-Route::get('auth/login', [LoginController::class, 'login']);
+
+
+Route::post('auth/login', [AuthController::class, 'login']);
 Route::post('auth/logout', [LoginController::class, 'logout']);
 Route::get('/logout_session', [LoginController::class, 'logout_session']);
+Route::middleware('auth:sanctum')->get('/sanctum/csrf-cookie', function (Request $request) {
+    return response()->json(['message' => 'CSRF cookie set'], 200);
+});
 Route::middleware('auth:sanctum')->get('/user_auth', function (Request $request) {
     return $request->user();
 });
@@ -73,3 +78,4 @@ Route::get('users/{id}', [UserController::class, 'show']);
 Route::post('search-branches-by-id', [BranchesProductController::class, 'searchBranchId']);
 Route::apiResource('branch-products', BranchesProductController::class);
 Route::put('update-branch-product/{id}', [BranchesProductController::class, 'updatePrice']);
+Route::get('branches/{branchId}/products', [BranchesProductController::class, 'getProducts']);
