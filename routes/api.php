@@ -28,16 +28,11 @@ use Illuminate\Validation\ValidationException;
 | be assigned to the "api" middleware group. Make something great!
 |
 */
-// ->middleware('auth:sanctum')
 
 
-
-Route::post('auth/login', [AuthController::class, 'login']);
+Route::get('auth/login', [LoginController::class, 'login']);
 Route::post('auth/logout', [LoginController::class, 'logout']);
 Route::get('/logout_session', [LoginController::class, 'logout_session']);
-Route::middleware('auth:sanctum')->get('/sanctum/csrf-cookie', function (Request $request) {
-    return response()->json(['message' => 'CSRF cookie set'], 200);
-});
 Route::middleware('auth:sanctum')->get('/user_auth', function (Request $request) {
     return $request->user();
 });
